@@ -532,16 +532,23 @@ double? _width(Map<String, String> attributes) {
 
 double _aspectRatio(
     Map<String, String> attributes, AsyncSnapshot<Size> calculated) {
+  double aspectRatio;
   final heightString = attributes["height"];
   final widthString = attributes["width"];
   if (heightString != null && widthString != null) {
     final height = double.tryParse(heightString);
     final width = double.tryParse(widthString);
-    return height == null || width == null
+    aspectRatio = height == null || width == null
         ? calculated.data!.aspectRatio
         : width / height;
+  } else {
+    aspectRatio = calculated.data!.aspectRatio;
   }
-  return calculated.data!.aspectRatio;
+  if (!aspectRatio.isNaN) {
+    return aspectRatio;
+  } else {
+    return 1;
+  }
 }
 
 extension ClampedEdgeInsets on EdgeInsetsGeometry {
